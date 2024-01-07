@@ -5,12 +5,12 @@ import Editor from './component/Editor';
 import './App.css'
 
 
+
 export default function App(){
 
   const [notes, setNotes] = React.useState([])
-  const [currentNoteId, setCurrentNoteId] = React.useState(
-    (notes[0] && notes[0].id) || ""
-  )
+  const [currentNoteId, setCurrentNoteId] = React.useState("")
+  const [tempNoteText, setTempNoteText] = React.useState("")
 
   const fetchNotes = () => {
     fetch('http://127.0.0.1:8000/notesapi/notes/')
@@ -37,11 +37,14 @@ export default function App(){
   }
 
   function updateNote(text){
+    const colonIndex = text.indexOf(':');
+    const slicedTitle = text.slice(0, colonIndex);
+    const bodyText = text.slice(colonIndex+1,)
     fetch(`http://127.0.0.1:8000/notesapi/notes/${currentNoteId}/`, {
       method: 'PUT',
       body: JSON.stringify({
-        title: currentNote.title,
-        body: text
+        title: slicedTitle,
+        body: bodyText
       }),
       headers: {'Content-type': 'application/json; charset=UTF-8'}
     })
@@ -60,14 +63,30 @@ export default function App(){
         }
       })
   }
+  React.useEffect(() => {
+    const timeoutId = setTimeout(() => {
+        if (tempNoteText !== currentNote.body) {
+            updateNote(tempNoteText)
+        }
+    }, 1000)
+    return () => clearTimeout(timeoutId)
+}, [tempNoteText])
   
   const currentNote = notes.find(note => note.id === currentNoteId) || notes[0]
-
-  console.log(currentNoteId)
-  console.log(currentNote)
+  React.useEffect(() => {
+    if (!currentNoteId) {
+        setCurrentNoteId(notes[0]?.id)
+    }
+}, [notes])
+  React.useEffect(() => {
+    if (currentNote) {
+        setTempNoteText(currentNote.body)
+    }
+}, [currentNote])
+  // console.log(notes)
+  // currentNote ? console.log(currentNote.title) : ""
   return(
     <main>
-      <h2>The app component has been rendered</h2>
       {
         notes.length > 0
           ?
@@ -83,11 +102,12 @@ export default function App(){
               newNote={addNote}
               deleteNote={deleteNote} 
             />
-            {
+            {/* {
               currentNoteId &&
               notes.length>0 &&
-              <Editor currentNote={currentNote} updateNote={updateNote} /> 
-            }
+              <Editor currentNote={tempNoteText} setTempNoteText={setTempNoteText} /> 
+            } */}
+            {currentNoteId && notes.length>0 && tempNoteText && <Editor tempNoteText={tempNoteText} setTempNoteText={setTempNoteText} />}
           </Split>
           :
           <div className='no-notes'>

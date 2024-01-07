@@ -4,8 +4,11 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import pickle
+with open('C:/Users/ticitaca_shubham/Desktop/Saas-apps/notes-app/notesapi/notelabel_model.pkl', 'rb') as file:
+        model = pickle.load(file)
 
-
+# print(model.predict(["spent 1000rs in food today"]))
 class NoteList(APIView):
     """
     List all snippets, or create a new note.

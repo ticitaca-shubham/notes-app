@@ -4,15 +4,8 @@ import Showdown from 'showdown';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 
-export default function Editor({ currentNote, updateNote}){
+export default function Editor({ tempNoteText, setTempNoteText}){
     const [selectedTab, setSelectedTab] = React.useState("write")
-
-    // const handleKeyDown = (e) => {
-    //     if (e.key === 'Enter' || e.key === ' ') {
-    //       e.preventDefault(); // Prevent default behavior
-    //       // Perform your custom action or nothing here
-    //     }
-    //   };
 
     const converter = new Showdown.Converter({
         tables: true,
@@ -20,12 +13,11 @@ export default function Editor({ currentNote, updateNote}){
         strikethrough: true,
         tasklists: true,
     })
-
     return(
         <section className='pane editor' >
             <ReactMde
-                value={currentNote.body}
-                onChange={updateNote}
+                value={tempNoteText}
+                onChange={setTempNoteText}
                 selectedTab={selectedTab}
                 onTabChange={setSelectedTab}
                 generateMarkdownPreview={(markdown) => 
