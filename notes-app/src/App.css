@@ -127,6 +127,7 @@ button:focus {
 
 .split {
     display: flex;
+    padding: 0 0.7rem;
 }
 
 .no-notes {
@@ -198,3 +199,16 @@ button:focus {
     left: -2px
 } 
 
+/* styling the tag component */
+.tag-container {
+    margin: 0;
+    background-color: #4A4E74;
+    color: white;
+    padding: 0 2px;
+    
+}
+.tag-container p {
+    font-size: 1.5rem;
+    font-weight: 600;
+    word-spacing: 5px;
+}

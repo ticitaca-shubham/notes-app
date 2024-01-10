@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactMde from 'react-mde';
 import Showdown from 'showdown';
+import Tag from './Tag';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 
-export default function Editor({ tempNoteText, setTempNoteText}){
+export default function Editor({ tempNoteText, setTempNoteText, noteLabel}){
     const [selectedTab, setSelectedTab] = React.useState("write")
 
     const converter = new Showdown.Converter({
@@ -25,6 +26,7 @@ export default function Editor({ tempNoteText, setTempNoteText}){
                 }
                 minEditorHeight={80}
                 heightUnits='vh' />
+            <Tag noteLabel={noteLabel} />
         </section>
     )
 }

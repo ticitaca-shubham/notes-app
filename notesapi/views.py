@@ -52,3 +52,19 @@ class NoteDetail(APIView):
         note = self.get_object(pk)
         note.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class NotePrediction(APIView):
+    """
+    Returns predictions for notes based on the loaded model.
+    """
+
+    def post(self, request):
+        text = request.data['text']
+        # print(request.data['text'])
+        if text is None:
+            return Response({'error': 'Text parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        prediction = model.predict([text])
+
+        return Response({'prediction': prediction[0]}, status=status.HTTP_200_OK)
